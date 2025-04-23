@@ -1,22 +1,23 @@
 import "@/utils/styles/globals.css";
-import { Viewport } from "next";
+import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
 
+import { title } from "@/components/common";
 import { fontSans } from "@/utils/fonts";
 import { Navbar } from "@/components/header/navbar";
 
-// export const metadata: Metadata = {
-//   title: {
-//     default: siteConfig.name,
-//     template: `%s - ${siteConfig.name}`,
-//   },
-//   description: siteConfig.description,
-//   icons: {
-//     icon: "/favicon.ico",
-//   },
-// };
+export const metadata: Metadata = {
+  title: {
+    default: "Gestión de Usuarios",
+    template: `%s - Gestión de Usuarios`,
+  },
+  description: "Herramienta Informático - Gestión de Usuarios",
+  icons: {
+    icon: "/user.svg",
+  },
+};
 
 export const viewport: Viewport = {
   themeColor: [
@@ -25,11 +26,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -42,7 +39,8 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
+            <main className="container mx-auto max-w-7xl pt-15 px-6 flex-grow">
+              <span className={title({ size: "sm" })}>Gestión de Usuarios</span>
               {children}
             </main>
             {/* <footer className="w-full flex items-center justify-center py-3">
