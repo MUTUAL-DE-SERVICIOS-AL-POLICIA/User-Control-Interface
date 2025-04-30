@@ -1,25 +1,37 @@
 export interface User {
-  id: number;
+  uuid: string;
   name: string;
   username: string;
-  identityCard?: string;
   position?: string;
 }
 export interface Module {
   id: string;
   name: string;
-  urlProd: string;
-  urlDev: string;
-  urlManual: string;
+  urlProd?: string;
+  urlDev?: string;
+  urlManual?: string;
 }
 
-export interface Role {
-  id: string;
+export interface Rol {
+  id: number;
   name: string;
+}
+export interface UserLdap {
+  username: string;
+  firstName: string;
+  lastName: string;
+  position?: string;
+}
+
+export interface userManagementModules {
+  id: number;
+  name?: string;
+  displayName?: string;
+  description?: string;
 }
 
 export interface ResponseData {
   error: boolean;
   message: string;
-  [key: string]: any; // Permite otros campos con nombres arbitrarios y valores de cualquier tipo
+  [key: string]: any;
 }

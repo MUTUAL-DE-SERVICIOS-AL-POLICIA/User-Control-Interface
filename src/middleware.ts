@@ -1,17 +1,39 @@
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export const middleware = async () => {
+export const middleware = async (request: NextRequest) => {
   const cookieStore = await cookies();
-  const cookie = cookieStore.get("msp");
-  const token = cookie?.value;
+  const token = cookieStore.get("msp")?.value;
+  const module = cookieStore.get(`mod_${process.env.ID_MODULE}`)?.value;
+  const { pathname } = request.nextUrl;
+  const segments = pathname.split("/").filter(Boolean);
+
+  const roles = (() => {
+    try {
+      return JSON.parse(module || "{}").roles || [];
+    } catch {
+      return [];
+    }
+  })();
+
+  const RolValid = roles.some(
+    (rol: { id: number }) => rol.id === Number(segments[0]),
+  );
 
   const host = process.env.NEXT_PUBLIC_SERVER_FRONTEND || "";
-  const port = process.env.LOGIN_FRONTEND_PORT || "";
-  const url = "http://" + host + ":" + port + "/login";
+  const port = process.env.NEXT_PUBLIC_SERVER_FRONTEND_PORT || "";
+  const portLogin = process.env.LOGIN_FRONTEND_PORT || "";
+
+  const protocol = request.headers.get("x-forwarded-proto") || "http";
+  const url = `${protocol}://${host}:${port}/`;
+  const urlLogin = `${protocol}://${host}:${portLogin}/login`;
 
   try {
-    if (!token) {
+    if (!token) return NextResponse.redirect(urlLogin);
+
+    if (!module) return NextResponse.redirect(urlLogin);
+
+    if (!RolValid && segments.length > 0 && segments[0]) {
       return NextResponse.redirect(url);
     }
 
@@ -19,6 +41,12 @@ export const middleware = async () => {
   } catch (e) {
     console.error("Error verificando token en middleware", e);
 
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(urlLogin);
   }
+};
+
+export const config = {
+  matcher: [
+    "/((?!_next/|favicon.ico|static/|images/|fonts/|api/|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg|.*\\.webp|.*\\.gif|.*\\.ico).*)",
+  ],
 };

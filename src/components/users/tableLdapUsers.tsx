@@ -15,17 +15,12 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Selection,
 } from "@heroui/table";
-import { User } from "@heroui/user";
 import React from "react";
 
-import {
-  ChevronDownIcon,
-  PlusIcon,
-  SearchIcon,
-  VerticalDotsIcon,
-} from "@/components/common";
-import { User as UserInterface } from "@/utils/interfaces";
+import { ChevronDownIcon, SearchIcon } from "@/components/common";
+import { UserLdap } from "@/utils/interfaces";
 
 interface column {
   name: string;
@@ -35,26 +30,42 @@ interface column {
 
 interface props {
   columns: column[];
-  users: UserInterface[];
+  users: UserLdap[];
+  onUserSelect: (userLdap: UserLdap | null) => void;
 }
 
 export function capitalize(s: string) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
 }
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["username", "firstName", "lastName"];
 
-export const TableUsers = ({ columns, users }: props) => {
+export const TableLdapUsers = ({ columns, users, onUserSelect }: props) => {
+  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
+    new Set([]),
+  );
+
+  const handleSelectionChange = (keys: Selection) => {
+    setSelectedKeys(keys);
+    const selectedKey = Array.from(keys)[0];
+
+    const selectedUser = sortedItems.find(
+      (user) => user.username === selectedKey,
+    );
+
+    onUserSelect(selectedUser || null);
+  };
+
   const [filterValue, setFilterValue] = React.useState("");
   const [visibleColumns, setVisibleColumns] = React.useState<Set<string>>(
     new Set(INITIAL_VISIBLE_COLUMNS),
   );
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [sortDescriptor, setSortDescriptor] = React.useState<{
-    column: keyof UserInterface;
+    column: keyof UserLdap;
     direction: "ascending" | "descending";
   }>({
-    column: "name",
+    column: "username",
     direction: "ascending",
   });
 
@@ -73,7 +84,12 @@ export const TableUsers = ({ columns, users }: props) => {
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase()),
+        ["username", "firstName", "lastName", "position"].some((key) =>
+          (user[key as keyof UserLdap] || "")
+            .toString()
+            .toLowerCase()
+            .includes(filterValue.toLowerCase()),
+        ),
       );
     }
 
@@ -102,39 +118,8 @@ export const TableUsers = ({ columns, users }: props) => {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback(
-    (user: UserInterface, columnKey: keyof UserInterface | "actions") => {
-      const cellValue = user[columnKey as keyof UserInterface];
-
-      switch (columnKey) {
-        case "name":
-          return (
-            <User
-              avatarProps={{ radius: "full", size: "sm" }}
-              classNames={{
-                description: "text-default-500",
-              }}
-              description={user.username}
-              name={cellValue}
-            />
-          );
-        case "actions":
-          return (
-            <div className="relative flex justify-end items-center gap-2">
-              <Dropdown className="bg-background border-1 border-default-200">
-                <DropdownTrigger>
-                  <Button isIconOnly radius="full" size="sm" variant="light">
-                    <VerticalDotsIcon className="text-default-400" />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu>
-                  <DropdownItem key="view">Ver</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </div>
-          );
-        default:
-          return cellValue;
-      }
+    (user: UserLdap, columnKey: keyof UserLdap) => {
+      return user[columnKey as keyof UserLdap];
     },
     [],
   );
@@ -156,7 +141,7 @@ export const TableUsers = ({ columns, users }: props) => {
     }
   }, []);
 
-  const pageSizes = [10, 25, 100, users.length];
+  const pageSizes = [10, users.length];
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
@@ -206,13 +191,6 @@ export const TableUsers = ({ columns, users }: props) => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button
-              className="bg-foreground text-background"
-              endContent={<PlusIcon />}
-              size="sm"
-            >
-              Agregar Nuevo Usuario
-            </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -282,6 +260,7 @@ export const TableUsers = ({ columns, users }: props) => {
   return (
     <Table
       isCompact
+      isHeaderSticky
       removeWrapper
       aria-label="Example table with custom cells, pagination and sorting"
       bottomContent={bottomContent}
@@ -292,13 +271,17 @@ export const TableUsers = ({ columns, users }: props) => {
         },
       }}
       classNames={classNames}
+      color="success"
+      selectedKeys={selectedKeys}
+      selectionMode="single"
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
+      onSelectionChange={handleSelectionChange}
       onSortChange={(descriptor) =>
         setSortDescriptor(
           descriptor as {
-            column: keyof UserInterface;
+            column: keyof UserLdap;
             direction: "ascending" | "descending";
           },
         )
@@ -317,10 +300,10 @@ export const TableUsers = ({ columns, users }: props) => {
       </TableHeader>
       <TableBody emptyContent={"No users found"} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item.username}>
             {(columnKey) => (
               <TableCell>
-                {renderCell(item, columnKey as keyof UserInterface)}
+                {renderCell(item, columnKey as keyof UserLdap)}
               </TableCell>
             )}
           </TableRow>

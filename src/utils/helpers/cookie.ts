@@ -32,3 +32,29 @@ export async function getUserCookie(): Promise<ResponseData> {
     };
   }
 }
+
+export async function getRolesCookie(): Promise<ResponseData> {
+  const nameCookie = `mod_${process.env.ID_MODULE}`;
+
+  try {
+    const raw = await getCookie(nameCookie);
+
+    if (!raw) {
+      return {
+        error: true,
+        message: "No se encontró los roles del modulo",
+      };
+    }
+
+    return {
+      error: false,
+      message: `Cookie mod_${nameCookie} obtenida exitosamente`,
+      data: JSON.parse(raw).roles,
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: `Error al parsear la cookie mod_${nameCookie}:` + error,
+    };
+  }
+}
