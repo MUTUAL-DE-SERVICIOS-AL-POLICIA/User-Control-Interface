@@ -259,21 +259,43 @@ export const PassKeyFill = ({
 };
 
 export const Usage = ({
-  width,
-  height,
+  width = 16,
+  height = 16,
   className = "",
   ...props
 }: IconSvgProps) => {
   return (
     <svg
-      className={`fill-black dark:fill-white ${className}`}
-      height={height || "24"}
-      viewBox="0 0 24 24"
-      width={width || "24"}
+      className={`fill-black dark:fill-current ${className}`}
+      height={height}
+      viewBox="0 0 16 16"
+      width={width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path d="M3 6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm1.5 4.5h4v-4h-4Zm8.25-5a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5h-7.5Zm0 6a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5h-7.5Zm0 6a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5h-7.5Zm-2.97-2.53a.75.75 0 0 1 0 1.06l-3.5 3.5a.75.75 0 0 1-1.06 0l-2-2a.75.75 0 1 1 1.06-1.06l1.47 1.47 2.97-2.97a.75.75 0 0 1 1.06 0Z" />
+      <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+      <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z" />
+    </svg>
+  );
+};
+
+export const ChevronRightIcon = ({ ...props }: IconSvgProps) => {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      focusable="false"
+      height="1em"
+      role="presentation"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+      viewBox="0 0 24 24"
+      width="1em"
+      {...props}
+    >
+      <path d="m9 18 6-6-6-6" />
     </svg>
   );
 };
