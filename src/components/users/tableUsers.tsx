@@ -48,7 +48,7 @@ export const TableUsers = ({ columns, users, usersLdap }: props) => {
   const [visibleColumns, setVisibleColumns] = React.useState<Set<string>>(
     new Set(INITIAL_VISIBLE_COLUMNS),
   );
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState<{
     column: keyof UserInterface;
     direction: "ascending" | "descending";
@@ -157,7 +157,13 @@ export const TableUsers = ({ columns, users, usersLdap }: props) => {
     }
   }, []);
 
-  const pageSizes = [10, 25, 100, users.length];
+  const pageSizes = [
+    5,
+    Math.round(users.length / 4 / 10) * 10,
+    Math.round(users.length / 2 / 10) * 10,
+    users.length,
+  ];
+
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
