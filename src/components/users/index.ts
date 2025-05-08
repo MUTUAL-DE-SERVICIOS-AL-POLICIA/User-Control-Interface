@@ -1,6 +1,8 @@
-export { TableUsers } from "./tableUsers";
-export { UserInfo } from "./userInfo";
-export { TabsSidebar } from "./tabsSidebar";
+export { CheckboxRoles } from "./checkboxRoles";
+export { DrawerRoles } from "./drawerRoles";
+export { ListBox } from "./listBox";
 export { ModalLdap } from "./modalLdap";
 export { TableLdapUsers } from "./tableLdapUsers";
-export { ListBox } from "./listBox";
+export { TableUsers } from "./tableUsers";
+export { TabsSidebar } from "./tabsSidebar";
+export { UserInfo } from "./userInfo";
