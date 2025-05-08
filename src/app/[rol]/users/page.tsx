@@ -22,7 +22,6 @@ export default async function Page() {
 
   return (
     <>
-      <div className={subtitle()}>Usuarios registrados</div>
       <Card className="border-small rounded-small border-default-100 dark:border-default-200 p-4 w-full">
         <TableUsers
           columns={columns}
