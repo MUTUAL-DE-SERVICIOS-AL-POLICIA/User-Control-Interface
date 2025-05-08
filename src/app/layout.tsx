@@ -10,10 +10,10 @@ import { Navbar } from "@/components/header/navbar";
 
 export const metadata: Metadata = {
   title: {
-    default: "Gestión de Usuarios",
-    template: `%s - Gestión de Usuarios`,
+    default: "Control de usuarios",
+    template: `%s - Control de usuarios`,
   },
-  description: "Herramienta Informático - Gestión de Usuarios",
+  description: "Herramienta Informático - Control de usuarios",
   icons: {
     icon: "/user.svg",
   },
@@ -26,7 +26,11 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html suppressHydrationWarning lang="en">
       <head />
@@ -40,7 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="relative flex flex-col h-screen">
             <Navbar />
             <main className="container mx-auto max-w-7xl flex-grow">
-              <span className={title({ size: "sm" })}>Gestión de Usuarios</span>
+              <span className={title({ size: "sm" })}>Control de usuarios</span>
               {children}
             </main>
             {/* <footer className="w-full flex items-center justify-center py-3">
