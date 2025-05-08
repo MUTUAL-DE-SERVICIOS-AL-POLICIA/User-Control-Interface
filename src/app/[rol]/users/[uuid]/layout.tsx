@@ -21,7 +21,6 @@ export default async function Layout({ children, params }: Props) {
 
   return (
     <>
-      {/* <div className={subtitle()}>Usuarios registrados</div> */}
       <Card className="flex flex-col md:flex-row gap-2 py-2 px-2">
         <Card className="w-full max-w-[300px]">
           <CardHeader className="justify-center">
