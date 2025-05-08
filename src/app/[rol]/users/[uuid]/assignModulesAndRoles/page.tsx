@@ -1,11 +1,14 @@
 import { Card } from "@heroui/card";
 
-// import { getUserManagementModules } from "@/api";
+import { ListBox } from "@/components/users";
+import { getUserManagementModules } from "@/api";
 
 export default async function Page() {
-  // const { data } = await getUserManagementModules();
+  const { data } = await getUserManagementModules();
 
   return (
-    <Card className="w-full md:flex-1">{/* <ListBox modules={data} /> */}</Card>
+    <Card className="w-full md:flex-1">
+      <ListBox modules={data} />
+    </Card>
   );
 }
