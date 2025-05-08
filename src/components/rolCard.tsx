@@ -12,7 +12,7 @@ interface Props {
 export const RolCard = ({ roles }: Props) => {
   const router = useRouter();
 
-  const handleCardClick = (roleId: number) => {
+  const handleCardClick = (roleId: string) => {
     router.push(`${roleId}/users`);
   };
 
