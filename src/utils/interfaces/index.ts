@@ -1,5 +1,5 @@
 export interface User {
-  uuid: string;
+  uuid?: string;
   name: string;
   username: string;
   position?: string;
@@ -13,7 +13,7 @@ export interface Module {
 }
 
 export interface Rol {
-  id: number;
+  id: string;
   name: string;
 }
 export interface UserLdap {
@@ -24,7 +24,7 @@ export interface UserLdap {
 }
 
 export interface userManagementModules {
-  id: number;
+  id: string;
   name?: string;
   displayName?: string;
   description?: string;
@@ -34,4 +34,8 @@ export interface ResponseData {
   error: boolean;
   message: string;
   [key: string]: any;
+}
+
+export interface userRoles extends Rol {
+  state: boolean;
 }
