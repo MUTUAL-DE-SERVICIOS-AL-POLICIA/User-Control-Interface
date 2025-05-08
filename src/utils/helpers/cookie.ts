@@ -9,6 +9,15 @@ async function getCookie(nameCookie: string) {
   return cookie;
 }
 
+export const checkCookie = async () => {
+  const cookie = getCookie("msp");
+
+  if (cookie == undefined) {
+    console.error("Sin cookie");
+  }
+  if (cookie) return cookie;
+};
+
 export async function getUserCookie(): Promise<ResponseData> {
   try {
     const raw = await getCookie("user");

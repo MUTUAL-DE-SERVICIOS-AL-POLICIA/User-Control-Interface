@@ -16,7 +16,8 @@ import { useState } from "react";
 import { TableLdapUsers } from "./";
 
 import { PlusIcon } from "@/components/common";
-import { UserLdap } from "@/utils/interfaces";
+import { UserLdap, User } from "@/utils/interfaces";
+import { postUserLdap } from "@/api";
 
 interface Props {
   usersLdap: UserLdap[];
@@ -35,21 +36,19 @@ export const ModalLdap = ({ usersLdap }: Props) => {
     { name: "Cargo", uid: "position", sortable: true },
   ];
 
-  const [selectedUsername, setSelectedUsername] = useState<UserLdap | null>(
-    null,
-  );
+  const [selectedUser, setSelectedUser] = useState<UserLdap | null>(null);
 
   const handleUserSelect = (userLdap: UserLdap | null) => {
-    setSelectedUsername(userLdap);
+    setSelectedUser(userLdap);
   };
 
   const handleClose = () => {
-    setSelectedUsername(null);
+    setSelectedUser(null);
     onOpenChange();
   };
 
-  const handleCreateUser = () => {
-    if (!selectedUsername)
+  const handleCreateUser = async () => {
+    if (!selectedUser) {
       addToast({
         title: "Aviso",
         description:
@@ -59,24 +58,35 @@ export const ModalLdap = ({ usersLdap }: Props) => {
         shouldShowTimeoutProgress: true,
       });
 
-    // if (true) {
-    addToast({
-      title: "Aceptado",
-      description: "Usuario registrado al área de trabajo",
-      color: "success",
-      timeout: 2000,
-      shouldShowTimeoutProgress: true,
-    });
-    // } else {
-    //   addToast({
-    //     title: "Aceptado",
-    //     description: "Usuario registrado al área de trabajo",
-    //     color: "success",
-    //     timeout: 2000,
-    //     shouldShowTimeoutProgress: true,
-    //   });
-    // }
+      return;
+    }
 
+    const user: User = {
+      name: `${selectedUser.firstName} ${selectedUser.lastName}`,
+      username: selectedUser.username,
+      position: selectedUser.position,
+    };
+
+    const { error, message } = await postUserLdap(user);
+
+    if (!error) {
+      addToast({
+        title: "Aceptado",
+        description: message,
+        color: "success",
+        timeout: 2000,
+        shouldShowTimeoutProgress: true,
+      });
+    } else {
+      addToast({
+        title: "Error",
+        description: message,
+        color: "danger",
+        timeout: 2000,
+        shouldShowTimeoutProgress: true,
+      });
+    }
+    setSelectedUser(null);
     onOpenChange();
   };
 
@@ -115,13 +125,11 @@ export const ModalLdap = ({ usersLdap }: Props) => {
                   Cerrar
                 </Button>
                 <Button
-                  color={selectedUsername ? "success" : "primary"}
-                  disabled={!selectedUsername}
+                  color={selectedUser ? "success" : "primary"}
+                  disabled={!selectedUser}
                   onPress={handleCreateUser}
                 >
-                  {selectedUsername
-                    ? "Registrar usuario"
-                    : "Seleccione usuario"}
+                  {selectedUser ? "Registrar usuario" : "Seleccione usuario"}
                 </Button>
               </ModalFooter>
             </>
