@@ -1,4 +1,5 @@
 "use client";
+
 import { Card } from "@heroui/card";
 import { useRouter } from "next/navigation";
 
@@ -12,9 +13,10 @@ interface Props {
 export const RolCard = ({ roles }: Props) => {
   const router = useRouter();
 
-  const handleCardClick = (roleId: string) => {
+  function handleCardClick(roleId: string) {
+    document.cookie = `currentRole=${roleId}; path=/; max-age=14400; SameSite=Strict`;
     router.push(`${roleId}/users`);
-  };
+  }
 
   return (
     <>
