@@ -65,14 +65,16 @@ export async function getUserManagementModules(): Promise<ResponseData> {
     if (!response.ok) {
       return {
         error: true,
-        message: "Se encontró un inconveniente para la obtención de los modulos de asignación de roles",
+        message:
+          "Se encontró un inconveniente para la obtención de los modulos de asignación de roles",
         data: response.statusText,
       };
     }
 
     return {
       error: false,
-      message: "Datos de los modulos para asignación de roles obtenidos exitosamente",
+      message:
+        "Datos de los modulos para asignación de roles obtenidos exitosamente",
       data,
     };
   } catch (err: any) {
