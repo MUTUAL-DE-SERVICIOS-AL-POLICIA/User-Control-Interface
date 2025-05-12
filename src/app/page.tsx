@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+
 import { RolCard } from "@/components/rolCard";
 import { getRolesCookie } from "@/utils/helpers/cookie";
 import { Rol } from "@/utils/interfaces";
@@ -8,14 +9,21 @@ import { urlLogin } from "@/utils/services";
 export default async function Page() {
   const { error, message, data } = await getRolesCookie();
 
-  if(error) {
-    return <AlertServer color="danger" description={message} href={`${urlLogin}/apphub`}/>;
+  if (error) {
+    return (
+      <AlertServer
+        color="danger"
+        description={message}
+        href={`${urlLogin}/apphub`}
+      />
+    );
   }
 
   const roles: Rol[] = data;
 
   if (roles.length === 1) {
     const rol = roles[0];
+
     return redirect(`/${rol.id}/users`);
   }
 
