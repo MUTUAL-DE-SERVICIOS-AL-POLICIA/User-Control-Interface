@@ -23,7 +23,7 @@ import { Link } from "@heroui/link";
 import { ModalLdap } from "./";
 
 import { ChevronDownIcon, SearchIcon, PassKeyFill } from "@/components/common";
-import { User as UserInterface, UserLdap } from "@/utils/interfaces";
+import { User as UserInterface } from "@/utils/interfaces";
 
 interface column {
   name: string;
@@ -34,7 +34,6 @@ interface column {
 interface props {
   columns: column[];
   users: UserInterface[];
-  usersLdap: UserLdap[];
 }
 
 export function capitalize(s: string) {
@@ -43,7 +42,7 @@ export function capitalize(s: string) {
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "actions"];
 
-export const TableUsers = ({ columns, users, usersLdap }: props) => {
+export const TableUsers = ({ columns, users }: props) => {
   const [filterValue, setFilterValue] = React.useState("");
   const [visibleColumns, setVisibleColumns] = React.useState<Set<string>>(
     new Set(INITIAL_VISIBLE_COLUMNS),
@@ -213,7 +212,7 @@ export const TableUsers = ({ columns, users, usersLdap }: props) => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <ModalLdap usersLdap={usersLdap} />
+            <ModalLdap />
           </div>
         </div>
         <div className="flex justify-between items-center">

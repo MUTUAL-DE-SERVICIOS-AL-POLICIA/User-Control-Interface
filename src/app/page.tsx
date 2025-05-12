@@ -3,8 +3,21 @@ import { redirect } from "next/navigation";
 import { RolCard } from "@/components/rolCard";
 import { getRolesCookie } from "@/utils/helpers/cookie";
 import { Rol } from "@/utils/interfaces";
+import { AlertServer } from "@/components/common";
+import { urlLogin } from "@/utils/services";
+
 export default async function Page() {
-  const { data } = await getRolesCookie();
+  const { error, message, data } = await getRolesCookie();
+
+  if (error) {
+    return (
+      <AlertServer
+        color="danger"
+        description={message}
+        href={`${urlLogin}/apphub`}
+      />
+    );
+  }
 
   const roles: Rol[] = data;
 

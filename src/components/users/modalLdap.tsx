@@ -12,18 +12,19 @@ import {
 import { Button } from "@heroui/button";
 import { addToast } from "@heroui/toast";
 import { useState } from "react";
+import { Spinner } from "@heroui/spinner";
 
 import { TableLdapUsers } from "./";
 
 import { PlusIcon } from "@/components/common";
 import { UserLdap, User } from "@/utils/interfaces";
 import { postUserLdap } from "@/api";
+import { getUserLdap } from "@/api";
 
-interface Props {
-  usersLdap: UserLdap[];
-}
-export const ModalLdap = ({ usersLdap }: Props) => {
+export const ModalLdap = () => {
+  const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [usersLdap, setUsersLdap] = useState<UserLdap[]>([]);
   const targetRef = React.useRef<HTMLElement>(
     null,
   ) as React.RefObject<HTMLElement>;
@@ -67,27 +68,55 @@ export const ModalLdap = ({ usersLdap }: Props) => {
       position: selectedUser.position,
     };
 
-    const { error, message } = await postUserLdap(user);
+    const { error, message, data } = await postUserLdap(user);
 
-    if (!error) {
+    if (error) {
       addToast({
-        title: "Aceptado",
-        description: message,
-        color: "success",
-        timeout: 2000,
-        shouldShowTimeoutProgress: true,
-      });
-    } else {
-      addToast({
-        title: "Error",
+        title: "Se encontró un inconveniente con la creación del usuario",
         description: message,
         color: "danger",
         timeout: 2000,
         shouldShowTimeoutProgress: true,
       });
+      console.error(data);
+
+      return;
     }
+
+    addToast({
+      title: "Aceptado",
+      description: message,
+      color: "success",
+      timeout: 2000,
+      shouldShowTimeoutProgress: true,
+    });
+
     setSelectedUser(null);
     onOpenChange();
+  };
+
+  const HandleOnOpen = async () => {
+    onOpen();
+    setLoading(true);
+    try {
+      const { error, message, data } = await getUserLdap();
+
+      if (error) {
+        addToast({
+          title:
+            "Se encontró un inconveniente con la obtención de los usuarios del Ldap",
+          description: message,
+          color: "danger",
+          timeout: 2000,
+          shouldShowTimeoutProgress: true,
+        });
+      }
+      setUsersLdap(data);
+    } catch (error) {
+      console.error("Error al obtener usuarios del ldap:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -96,7 +125,7 @@ export const ModalLdap = ({ usersLdap }: Props) => {
         className="bg-foreground text-background"
         endContent={<PlusIcon />}
         size="sm"
-        onPress={onOpen}
+        onPress={HandleOnOpen}
       >
         Registrar nuevo usuario
       </Button>
@@ -114,6 +143,15 @@ export const ModalLdap = ({ usersLdap }: Props) => {
                 Usuarios no registrados
               </ModalHeader>
               <ModalBody>
+                {loading && (
+                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black/20 z-10">
+                    <Spinner
+                      classNames={{ label: "text-foreground mt-4" }}
+                      size="lg"
+                      variant="spinner"
+                    />
+                  </div>
+                )}
                 <TableLdapUsers
                   columns={columns}
                   users={usersLdap}

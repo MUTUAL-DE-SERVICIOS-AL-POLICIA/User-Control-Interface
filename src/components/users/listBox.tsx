@@ -4,6 +4,7 @@ import { Listbox, ListboxItem } from "@heroui/listbox";
 import { Divider } from "@heroui/divider";
 import { Spinner } from "@heroui/spinner";
 import { useState } from "react";
+import { addToast } from "@heroui/toast";
 
 import { DrawerRoles } from "./drawerRoles";
 
@@ -25,13 +26,25 @@ export const ListBox = ({ modules }: Props) => {
     setLoading(true);
     setModule(module);
     try {
-      const response = await getUserRoles("", module.id);
+      const { error, message, data } = await getUserRoles("", module.id);
 
-      setUserRoles(response.data);
+      if (error) {
+        addToast({
+          title: "Se encontró un inconveniente con la obtención de los roles",
+          description: message,
+          color: "danger",
+          timeout: 2000,
+          shouldShowTimeoutProgress: true,
+        });
+        console.error(data);
+
+        return;
+      }
+
+      setUserRoles(data);
       setIsDrawerOpen(true);
     } catch (error) {
-      console.error("Error al obtener roles:", error);
-      //toast
+      console.error("Error al obtener roles del usuario:", error);
     } finally {
       setLoading(false);
     }

@@ -43,7 +43,7 @@ export const BreadcrumbsState = ({ rolName }: Props) => {
     <div className="flex flex-col flex-wrap gap-4">
       <Breadcrumbs underline="hover">
         <BreadcrumbItem key="roles">
-          <Link href="/">Roles</Link>
+          <Link href="/">Inicio</Link>
         </BreadcrumbItem>
 
         {breadcrumbs.map((crumb, index) => {

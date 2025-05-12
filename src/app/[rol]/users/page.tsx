@@ -1,18 +1,16 @@
 import { Card } from "@heroui/card";
 
-import { subtitle } from "@/components/common";
 import { TableUsers } from "@/components/users";
-import { getUsers, getUserLdap } from "@/api";
+import { getUsers } from "@/api";
+import { AlertServer } from "@/components/common";
+
 export default async function Page() {
-  const users = await getUsers();
-  const usersLdap = await getUserLdap();
+  const { error, message, data } = await getUsers();
 
-  if (users.error) {
-    return <div className={subtitle()}>No hay usuarios registrados</div>;
-  }
+  if (error) {
+    console.error(data);
 
-  if (usersLdap.error) {
-    return <div className={subtitle()}>No hay usuarios ldap registrados</div>;
+    return <AlertServer color="danger" description={message} href="/" />;
   }
 
   const columns = [
@@ -23,11 +21,7 @@ export default async function Page() {
   return (
     <>
       <Card className="border-small rounded-small border-default-100 dark:border-default-200 p-4 w-full">
-        <TableUsers
-          columns={columns}
-          users={users.data}
-          usersLdap={usersLdap.data}
-        />
+        <TableUsers columns={columns} users={data} />
       </Card>
     </>
   );

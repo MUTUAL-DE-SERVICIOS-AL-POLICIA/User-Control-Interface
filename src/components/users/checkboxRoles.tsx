@@ -21,17 +21,9 @@ export const CheckboxRoles = ({ userRoles, onClose }: Props) => {
   const handleRoleChange = async (rol: userRoles) => {
     setLoading(true);
     try {
-      const { error, message } = await postUserRoles(uuid, rol.id);
+      const { error, message, data } = await postUserRoles(uuid, rol.id);
 
-      if (!error) {
-        addToast({
-          title: "Aceptado",
-          description: `Rol ${rol.name} ${message}`,
-          color: "success",
-          timeout: 1000,
-          shouldShowTimeoutProgress: true,
-        });
-      } else {
+      if (error) {
         addToast({
           title: "Error",
           description: `Rol ${rol.name} ${message}`,
@@ -39,10 +31,23 @@ export const CheckboxRoles = ({ userRoles, onClose }: Props) => {
           timeout: 1000,
           shouldShowTimeoutProgress: true,
         });
+        console.error(data);
         onClose();
+
+        return;
       }
+
+      addToast({
+        title: "Aceptado",
+        description: `Rol ${rol.name} ${message}`,
+        color: "success",
+        timeout: 1000,
+        shouldShowTimeoutProgress: true,
+      });
+
+      return;
     } catch (error) {
-      console.error("Error al obtener roles:", error);
+      console.error("Error al asignar rol al usuario:", error);
     } finally {
       setLoading(false);
     }
