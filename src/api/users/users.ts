@@ -11,20 +11,20 @@ export async function getUsers(): Promise<ResponseData> {
     if (!response.ok) {
       return {
         error: true,
-        message: "Error al obtener usuarios",
+        message: "No se pudo obtener los usuarios",
         data: response.statusText,
       };
     }
 
     return {
       error: false,
-      message: "Datos del usuario obtenido exitosamente",
+      message: "Usuarios obtenidos exitosamente",
       data,
     };
   } catch (err: any) {
     return {
       error: true,
-      message: "Error de red o de formato JSON",
+      message: "Error al obtener datos getUsers",
       data: err.message,
     };
   }
@@ -51,7 +51,7 @@ export async function getUser(uuid: string): Promise<ResponseData> {
   } catch (err: any) {
     return {
       error: true,
-      message: "Error al obtener datos del usuario",
+      message: "Error al obtener getUser",
       data: err.message,
     };
   }
@@ -65,20 +65,20 @@ export async function getUserManagementModules(): Promise<ResponseData> {
     if (!response.ok) {
       return {
         error: true,
-        message: "Error al obtener modulos",
+        message: "Se encontró un inconveniente para la obtención de los modulos de asignación de roles",
         data: response.statusText,
       };
     }
 
     return {
       error: false,
-      message: "Datos de los modulos obtenidos exitosamente",
+      message: "Datos de los modulos para asignación de roles obtenidos exitosamente",
       data,
     };
   } catch (err: any) {
     return {
       error: true,
-      message: "Error al obtener datos del usuario",
+      message: "Error al obtener getUserManagementModules",
       data: err.message,
     };
   }
@@ -211,7 +211,7 @@ export async function getUserRoles(
   } catch (err: any) {
     return {
       error: true,
-      message: "Error al obtener datos del usuario",
+      message: "Error al obtener roles de los usuarios getUserRoles",
       data: err.message,
     };
   }
