@@ -2,27 +2,22 @@ import { cookies } from "next/headers";
 
 import { ResponseData } from "@/utils/interfaces";
 
-async function getCookie(nameCookie: string) {
+export async function getCookie(nameCookie: string): Promise<any> {
   const cookieStore = await cookies();
-  const cookie = cookieStore.get(nameCookie)?.value;
+  const cookie = cookieStore.get(nameCookie);
 
-  return cookie;
-}
-
-export const checkCookie = async () => {
-  const cookie = getCookie("msp");
-
-  if (cookie == undefined) {
-    console.error("Sin cookie");
+  if (!cookie) {
+    return undefined;
   }
-  if (cookie) return cookie;
-};
+
+  return cookie.value;
+}
 
 export async function getUserCookie(): Promise<ResponseData> {
   try {
-    const raw = await getCookie("user");
+    const cookie = await getCookie("user");
 
-    if (!raw) {
+    if (!cookie) {
       return {
         error: true,
         message: "No se encontró la cookie 'user'",
@@ -32,12 +27,12 @@ export async function getUserCookie(): Promise<ResponseData> {
     return {
       error: false,
       message: "Cookie 'user' obtenida exitosamente",
-      data: JSON.parse(raw),
+      data: JSON.parse(cookie),
     };
   } catch (error) {
     return {
       error: true,
-      message: "Error al parsear la cookie 'user': " + error,
+      message: "Error al obtener la cookie 'user': " + error,
     };
   }
 }
@@ -46,24 +41,33 @@ export async function getRolesCookie(): Promise<ResponseData> {
   const nameCookie = `mod_${process.env.ID_MODULE}`;
 
   try {
-    const raw = await getCookie(nameCookie);
+    const cookie = await getCookie(nameCookie);
 
-    if (!raw) {
+    if (!cookie) {
       return {
         error: true,
-        message: "No se encontró los roles del modulo",
+        message: "No se encontró la cookie del modulo_#",
+      };
+    }
+
+    const roles = JSON.parse(cookie).roles;
+
+    if (roles.length === 0) {
+      return {
+        error: true,
+        message: `Modulo encontrado exitosamente, pero no tiene roles asignados`,
       };
     }
 
     return {
       error: false,
       message: `Cookie mod_${nameCookie} obtenida exitosamente`,
-      data: JSON.parse(raw).roles,
+      data: roles,
     };
   } catch (error) {
     return {
       error: true,
-      message: `Error al parsear la cookie mod_${nameCookie}:` + error,
+      message: `Error al encontrar la cookie mod_${nameCookie}:` + error,
     };
   }
 }
