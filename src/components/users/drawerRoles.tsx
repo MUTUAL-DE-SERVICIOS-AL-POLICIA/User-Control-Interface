@@ -12,6 +12,7 @@ import { Divider } from "@heroui/divider";
 
 import { userRoles, userManagementModules } from "@/utils/interfaces";
 import { CheckboxRoles } from "@/components/users";
+
 interface DrawerRoleProps {
   isOpen: boolean;
   onClose: () => void;
@@ -38,7 +39,6 @@ export const DrawerRoles = ({
                 <br />
                 Roles
               </DrawerHeader>
-
               <Divider />
               <DrawerBody>
                 <CheckboxRoles userRoles={userRoles} onClose={onClose} />
