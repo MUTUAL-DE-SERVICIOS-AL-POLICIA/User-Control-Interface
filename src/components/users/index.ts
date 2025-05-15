@@ -6,3 +6,4 @@ export { TableLdapUsers } from "./tableLdapUsers";
 export { TableUsers } from "./tableUsers";
 export { TabsSidebar } from "./tabsSidebar";
 export { UserInfo } from "./userInfo";
+export { TabsContent } from "./tabsContent";

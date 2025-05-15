@@ -14,8 +14,8 @@ export const RolCard = ({ roles }: Props) => {
   const router = useRouter();
 
   function handleCardClick(roleId: string) {
-    document.cookie = `currentRole=${roleId}; path=/; max-age=14400; SameSite=Strict`;
-    router.push(`${roleId}/users`);
+    document.cookie = `currentRol=${roleId}; path=/; max-age=14400; SameSite=Strict`;
+    router.push(`/users`);
   }
 
   return (
