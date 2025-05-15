@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 import { Providers } from "./providers";
 
-import { title } from "@/components/common";
+import { title, subtitle, BreadcrumbsState } from "@/components/common";
 import { fontSans } from "@/utils/fonts";
 import { Navbar } from "@/components/header/navbar";
 
@@ -45,6 +45,9 @@ export default async function Layout({
             <Navbar />
             <main className="container mx-auto max-w-7xl flex-grow">
               <span className={title({ size: "sm" })}>Control de usuarios</span>
+              <div className={subtitle()}>
+                <BreadcrumbsState />
+              </div>
               {children}
             </main>
             {/* <footer className="w-full flex items-center justify-center py-3">
