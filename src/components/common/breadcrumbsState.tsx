@@ -3,27 +3,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Breadcrumbs, BreadcrumbItem } from "@heroui/breadcrumbs";
 
-interface Props {
-  rolName: string;
-}
-
-export const BreadcrumbsState = ({ rolName }: Props) => {
+export const BreadcrumbsState = () => {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
-  let foundFirstId = false;
-
   const getLabelFromSegment = (segment: string): string => {
-    if (/^\d+$/.test(segment)) {
-      if (!foundFirstId) {
-        foundFirstId = true;
-
-        return rolName;
-      }
-
-      return segment;
-    }
-
     if (/^users$/.test(segment)) return "Usuarios registrados";
     if (/^[0-9a-fA-F-]{36}$/.test(segment)) return "Perfil del usuario";
     if (/^assignModulesAndRoles$/.test(segment))
@@ -48,15 +32,10 @@ export const BreadcrumbsState = ({ rolName }: Props) => {
 
         {breadcrumbs.map((crumb, index) => {
           const isCurrent = index === breadcrumbs.length - 1;
-          const isFirst = index === 0;
 
           return (
             <BreadcrumbItem key={crumb.href} isCurrent={isCurrent}>
-              {isCurrent || isFirst ? (
-                <span>{crumb.label}</span>
-              ) : (
-                <Link href={crumb.href}>{crumb.label}</Link>
-              )}
+              <Link href={crumb.href}>{crumb.label}</Link>
             </BreadcrumbItem>
           );
         })}
