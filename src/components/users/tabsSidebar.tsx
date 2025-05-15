@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Tabs, Tab } from "@heroui/tabs";
-import { usePathname, useRouter } from "next/navigation";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 import { Usage } from "@/components/common";
 
@@ -13,12 +13,15 @@ interface Props {
 }
 
 export const TabsSidebar = ({ sidebar }: Props) => {
+  const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
-  const currentTab =
-    sidebar.find((item) => pathname.includes(item.shortened))?.shortened ??
-    sidebar[0].shortened;
+  const currentTab = searchParams.get("permission") ?? sidebar[0].shortened;
+
+  const handleTabChange = (key: string) => {
+    router.push(`${pathname}?permission=${key}`);
+  };
 
   return (
     <div className="flex w-full flex-col">
@@ -36,7 +39,7 @@ export const TabsSidebar = ({ sidebar }: Props) => {
         isVertical={true}
         selectedKey={currentTab}
         variant="underlined"
-        onSelectionChange={(key) => router.push(String(key))}
+        onSelectionChange={(key) => handleTabChange(String(key))}
       >
         {sidebar.map((item) => (
           <Tab
