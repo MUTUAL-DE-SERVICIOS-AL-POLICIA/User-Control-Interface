@@ -5,9 +5,8 @@ export const middleware = async (request: NextRequest) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("msp")?.value;
   const module = cookieStore.get(`mod_${process.env.ID_MODULE}`)?.value;
-  const { pathname } = request.nextUrl;
-  const segments = pathname.split("/").filter(Boolean);
-
+  const currentRol = cookieStore.get("currentRol")?.value;
+  
   const roles = (() => {
     try {
       return JSON.parse(module || "{}").roles || [];
@@ -17,7 +16,7 @@ export const middleware = async (request: NextRequest) => {
   })();
 
   const RolValid = roles.some(
-    (rol: { id: number }) => rol.id === Number(segments[0]),
+    (rol: { id: number }) => rol.id === Number(currentRol),
   );
 
   const host = process.env.NEXT_PUBLIC_SERVER_FRONTEND || "";
@@ -33,7 +32,7 @@ export const middleware = async (request: NextRequest) => {
 
     if (!module) return NextResponse.redirect(urlLogin);
 
-    if (!RolValid && segments.length > 0 && segments[0]) {
+    if (!RolValid && currentRol) {
       return NextResponse.redirect(url);
     }
 
