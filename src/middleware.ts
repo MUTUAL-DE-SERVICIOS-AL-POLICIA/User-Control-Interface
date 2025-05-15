@@ -6,7 +6,7 @@ export const middleware = async (request: NextRequest) => {
   const token = cookieStore.get("msp")?.value;
   const module = cookieStore.get(`mod_${process.env.ID_MODULE}`)?.value;
   const currentRol = cookieStore.get("currentRol")?.value;
-  
+
   const roles = (() => {
     try {
       return JSON.parse(module || "{}").roles || [];
